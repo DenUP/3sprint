@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:matule_test/core/dio_network.dart';
-import 'package:matule_test/story_book.dart';
+import 'package:matule2026/getit.dart';
+import 'package:matule2026/home.dart';
+import 'package:matule2026/login.dart';
+import 'package:matule2026/user/user_provider.dart';
 import 'package:network/network.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
-  final dio = await DioNetwork.dioCreate(); // перехватчик уже добавлен
-  final network = Network(dio: dio);
-  final shared = await SharedPreferences.getInstance();
-  runApp(App());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final network = getIt<Network>();
+  final userProvider = UserProvider(network: network);
+  await userProvider.getUser();
+  await setup();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider(network: getIt())),
+      ],
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -16,6 +27,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: StoryBook());
+    final userProvider = context.read<UserProvider>();
+    return MaterialApp(
+      home: userProvider.user == null ? Login(network: getIt()) : Home(),
+    );
   }
 }
