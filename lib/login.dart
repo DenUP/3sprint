@@ -1,8 +1,8 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:matule2026/home.dart';
 import 'package:matule2026/main.dart';
+import 'package:matule2026/menu.dart';
+import 'package:matule2026/pdf1.dart';
 import 'package:matule2026/user/user_provider.dart';
 import 'package:network/network.dart';
 import 'package:provider/provider.dart';
@@ -25,47 +25,51 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppTextfomfield(
-                helpText: 'Вход по E-mail',
-                onTap: (value) => setState(() {
-                  email = value;
-                }),
-              ),
-              SizedBox(height: 20),
-              AppTextfomfield(
-                helpText: 'Password',
-                onTap: (value) => setState(() {
-                  password = value;
-                }),
-              ),
-              BigButton().accent(
-                name: '231',
-                onTap: () async {
-                  try {
-                    final response = await widget.network.userApi
-                        .usersAuthWithPassword(
-                          email: email,
-                          password: password,
-                        );
-                    if (response.record != null) {
-                      final userProvider = context.read<UserProvider>();
-                      userProvider.setUser(response.record!, response.token!);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
-                    }
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-              ),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppTextfomfield(
+                  helpText: 'Вход по E-mail',
+                  onTap: (value) => setState(() {
+                    email = value;
+                  }),
+                ),
+                SizedBox(height: 20),
+                AppTextfomfield(
+                  helpText: 'Password',
+                  onTap: (value) => setState(() {
+                    password = value;
+                  }),
+                ),
+                BigButton().accent(name: '231', onTap: () async {}),
+                SizedBox(height: 50),
+
+                SizedBox(
+                  height: 60,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: [
+                      Menu(isActive: false),
+                      Menu(isActive: true),
+                      Menu(isActive: false),
+                      Menu(isActive: false),
+                      Menu(isActive: false),
+                      Menu(isActive: true),
+                      Menu(isActive: false),
+                      Menu(isActive: false),
+                      Menu(isActive: false),
+                      Menu(isActive: true),
+                      Menu(isActive: false),
+                      Menu(isActive: false),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

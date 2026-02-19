@@ -8,10 +8,11 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await setup();
+
   final network = getIt<Network>();
   final userProvider = UserProvider(network: network);
   await userProvider.getUser();
-  await setup();
   runApp(
     MultiProvider(
       providers: [
